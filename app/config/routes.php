@@ -43,7 +43,7 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
 |
 */
 /** @var object $router **/
-
+//haha
 $router->get('/', 'Dashboard::index');
 
 require_once APP_DIR . 'middlewares/Cors_middleware.php';
