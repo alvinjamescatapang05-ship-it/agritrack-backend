@@ -1,6 +1,8 @@
 ARG PHP_VERSION=8.4
 FROM php:${PHP_VERSION}-apache
 
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+
 # Install PDO MySQL
 RUN docker-php-ext-install pdo pdo_mysql
 
@@ -8,7 +10,8 @@ RUN docker-php-ext-install pdo pdo_mysql
 RUN a2enmod rewrite
 
 # Allow .htaccess overrides
-RUN sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
+RUN sed -ri "s!/var/www/html!${APACHE_DOCUMENT_ROOT}!g" /etc/apache2/sites-available/*.conf \
+    && sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
 
 # Copy app files
 COPY . /var/www/html/

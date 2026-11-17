@@ -269,6 +269,16 @@ class Database {
         );
 
         try {
+            $sslCa = $database_config['ssl_ca'] ?? '';
+            if ($driver === 'mysql' && $sslCa !== '') {
+                if (!is_file($sslCa) || !is_readable($sslCa)) {
+                    throw new PDOException('The configured DB_SSL_CA file is missing or unreadable.');
+                }
+
+                $options[PDO::MYSQL_ATTR_SSL_CA] = $sslCa;
+                $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = true;
+            }
+
             $this->db = new PDO($dsn, $username, $password, $options);
             $this->driver = $this->db->getAttribute(PDO::ATTR_DRIVER_NAME);
         } catch (Exception $e) {

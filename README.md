@@ -223,6 +223,17 @@ npm run dev
 Production builds are served by LavaLust from `public/react/`. No React files
 are placed in `app/views/`.
 
+When deploying the frontend to Vercel, Vite writes the build to `frontend/dist/`
+and uses root-relative asset paths. Set the Vercel project environment variable
+`VITE_API_BASE_URL` to the deployed LavaLust API origin; the Vite `/api` proxy
+only applies to local development.
+
+The Render Docker service must keep Apache's document root set to `public/`.
+This lets LavaLust resolve routed URLs such as `/api/auth/me` correctly.
+For Aiven MySQL, upload its CA certificate as a Render secret file and set
+`DB_SSL_CA` to that file's `/etc/secrets/...` path. TLS server-certificate
+verification is enabled when this setting is provided.
+
 ## AGRI-TRACK Phase 1: Database and Backend Foundation
 
 The AGRI-TRACK Phase 1 foundation adds normalized MySQL tables for users,
