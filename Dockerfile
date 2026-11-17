@@ -9,6 +9,10 @@ RUN docker-php-ext-install pdo pdo_mysql
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
+# Allow Apache to read Render-mounted secret files (group ID 1000).
+RUN groupadd --gid 1000 render-secrets \
+    && usermod --append --groups render-secrets www-data
+
 # Allow .htaccess overrides
 RUN sed -ri "s!/var/www/html!${APACHE_DOCUMENT_ROOT}!g" /etc/apache2/sites-available/*.conf \
     && sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
