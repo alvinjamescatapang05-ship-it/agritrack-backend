@@ -38,7 +38,7 @@ class seed_agritrack_reference_data
         );
         $db->raw(
             'UPDATE users
-             INNER JOIN roles ON roles.slug = users.role
+             INNER JOIN roles ON roles.slug = users.role COLLATE utf8mb4_unicode_ci
              SET users.role_id = roles.id
              WHERE users.role_id IS NULL'
         );
